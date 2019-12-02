@@ -396,7 +396,7 @@ uint8_t Temperature::soft_pwm_amount[HOTENDS],
         temp_ms = ms;
       } // every 2 seconds
       // Over 2 minutes?
-      if (((ms - t1) + (ms - t2)) > (10L * 60L * 1000L * 2L)) {
+      if (((ms - t1) + (ms - t2)) > (10L * 60L * 1000L * 3L)) {
         SERIAL_PROTOCOLLNPGM(MSG_PID_TIMEOUT);
         return;
       }
@@ -506,26 +506,42 @@ int Temperature::getHeaterPower(int heater) {
 //
 // Temperature Error Handlers
 //
-void Temperature::_temp_error(const int8_t e, const char * const serial_msg, const char * const lcd_msg) {
+void Temperature::_temp_error(const int8_t e, const char * const serial_msg, const char * const lcd_msg) 
+{
   static bool killed = false;
-  if (IsRunning()) {
+  if (IsRunning())
+  {
     SERIAL_ERROR_START();
     serialprintPGM(serial_msg);
     SERIAL_ERRORPGM(MSG_STOPPED_HEATER);
-    if (e >= 0) SERIAL_ERRORLN((int)e); else SERIAL_ERRORLNPGM(MSG_HEATER_BED);
+    if (e >= 0)
+    {
+      SERIAL_ERRORLN((int)e); 
+    }
+    else
+    {
+      SERIAL_ERRORLNPGM(MSG_HEATER_BED);
+    }
   }
   #if DISABLED(BOGUS_TEMPERATURE_FAILSAFE_OVERRIDE)
-    if (!killed) {
+    if (!killed)
+    {
+      // Generate error temperature, close firmware.			
       Running = false;
       killed = true;
+      // Diabale lcd message display
       kill(lcd_msg);
     }
     else
-      disable_all_heaters(); // paranoia
+    {
+      // paranoia prohibits all heating.
+      disable_all_heaters();
+    }
   #endif
 }
 
-void Temperature::max_temp_error(const int8_t e) {
+void Temperature::max_temp_error(const int8_t e) 
+{
   #if HAS_TEMP_BED
     _temp_error(e, PSTR(MSG_T_MAXTEMP), e >= 0 ? PSTR(MSG_ERR_MAXTEMP) : PSTR(MSG_ERR_MAXTEMP_BED));
   #else
@@ -535,7 +551,8 @@ void Temperature::max_temp_error(const int8_t e) {
     #endif
   #endif
 }
-void Temperature::min_temp_error(const int8_t e) {
+void Temperature::min_temp_error(const int8_t e) 
+{
   #if HAS_TEMP_BED
     _temp_error(e, PSTR(MSG_T_MINTEMP), e >= 0 ? PSTR(MSG_ERR_MINTEMP) : PSTR(MSG_ERR_MINTEMP_BED));
   #else

@@ -545,7 +545,8 @@ void MarlinSettings::postprocess() {
     EEPROM_WRITE(volumetric_enabled);
 
     // Save filament sizes
-    for (uint8_t q = 0; q < MAX_EXTRUDERS; q++) {
+    for (uint8_t q = 0; q < MAX_EXTRUDERS; q++) 
+	{
       if (q < COUNT(filament_size)) dummy = filament_size[q];
       EEPROM_WRITE(dummy);
     }
@@ -930,7 +931,8 @@ void MarlinSettings::postprocess() {
 
       EEPROM_READ(volumetric_enabled);
 
-      for (uint8_t q = 0; q < MAX_EXTRUDERS; q++) {
+      for (uint8_t q = 0; q < MAX_EXTRUDERS; q++) 
+	  {
         EEPROM_READ(dummy);
         if (q < COUNT(filament_size)) filament_size[q] = dummy;
       }
