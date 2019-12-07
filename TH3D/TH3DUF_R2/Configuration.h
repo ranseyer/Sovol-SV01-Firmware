@@ -380,7 +380,7 @@
  *    tr, uk, zh_CN, zh_TW, test
  */
 
-#define LCD_LANGUAGE en
+#define LCD_LANGUAGE de
 
 #include "Configuration_beta.h"
 #include "Configuration_backend.h"
